@@ -13,7 +13,7 @@ export default function Home() {
     <Layout>
       <div className="card">
         <div className="card-body">
-          <h2 className="card-title">Welcome to My Website</h2>
+          <h2 className="card-title">Welcome to Mylinks</h2>
           <p className="card-text">
             Please <a href="/register">register</a> or <a href="/login">login</a> to access the dashboard.
           </p>
