@@ -17,4 +17,4 @@ jobs:
         run: |
           echo "${{ secrets.DEPLOY_KEY }}" > deploy_key
           chmod 600 deploy_key
-          ssh -o StrictHostKeyChecking=no -i deploy_key root@5.161.155.48 "cd /root/xlinks-ui && git pull origin main && npm run build && pm2 restart my-nextjs-app"
+          ssh -o StrictHostKeyChecking=no -i deploy_key root@5.161.155.48 "cd /root/xlinks-ui && git pull origin main && npm install && npm run build && pm2 restart my-nextjs-app"
