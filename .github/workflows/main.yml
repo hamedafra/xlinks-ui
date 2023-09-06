@@ -3,18 +3,18 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main  # replace with your branch name, if different
+      - main # replace with your branch name, if different
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Deploy to Server
-      run: |
-        echo "${{ secrets.DEPLOY_KEY }}" > deploy_key
-        chmod 600 deploy_key
-        ssh -o StrictHostKeyChecking=no -i deploy_key root@5.161.155.48 "cd /root/xlinks-ui && git pull origin main && npm install && pm2 restart my-nextjs-app"
+      - name: Deploy to Server
+        run: |
+          echo "${{ secrets.DEPLOY_KEY }}" > deploy_key
+          chmod 600 deploy_key
+          ssh -o StrictHostKeyChecking=no -i deploy_key root@5.161.155.48 "mkdir xlinks-ui && cd /root/xlinks-ui && git pull origin main && npm install && pm2 restart my-nextjs-app"
