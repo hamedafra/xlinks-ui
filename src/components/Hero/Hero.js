@@ -7,7 +7,7 @@ export default function Hero() {
       <div class="py-8 px-4 flex   mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12 ">
         <div class="flex mb-8 gap-3 justify-center  mt-5 flex-col flex-1">
           <h1 class="mb-4 text-2xl font-bold  tracking-tight leading-none text-gray-100  ">
-            مای لینکز تخصصی ترین سیستم مستقیم کننده لینک
+            مای لینکز ک
           </h1>
           <div className="flex items-center justify-center ">
             <a
@@ -26,7 +26,6 @@ export default function Hero() {
                   clip-rule="evenodd"
                 ></path>
               </svg>
-              از اینجا شروع کنید
             </a>
             <a
               href="#"
