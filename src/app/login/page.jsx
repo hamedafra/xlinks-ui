@@ -31,8 +31,8 @@ const LoginForm = () => {
       console.log("Refresh Token:", refresh);
       setAlert({ status: "succ", msg: "ورود موفق امیز بود" });
       setTimeout(() => {
-        router.push("/dashbord");
-      }, 1000);
+        router.push("/dashboard");
+      }, 200);
     } catch (error) {
       console.error(error);
       setAlert({ status: "error", msg: "خطا در ورود !!!!" });
