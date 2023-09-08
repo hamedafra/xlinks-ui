@@ -39,9 +39,7 @@ const LoginForm = () => {
           {({ isSubmitting }) => (
             <Form>
               <div className="mb-4">
-                <label htmlFor="email" className="mb-2">
-                  ایمیل
-                </label>
+                <label htmlFor="email">ایمیل</label>
                 <Field
                   type="email"
                   name="email"
