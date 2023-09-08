@@ -1,34 +1,31 @@
-"use client";
 import React from "react";
+import { useNavigation } from 'next/navigation'; 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { FaLock, FaSign, FaSignInAlt, FaUserPlus } from "react-icons/fa";
-import Cookies from "universal-cookie";
+import { FaHeart, FaSignInAlt, FaSpinner, FaUserPlus } from "react-icons/fa";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("فرمت ایمیل اشتباه است ")
     .required("پر کردن این فیلد اجباری است "),
-  password: Yup.string().required("Required"),
+  password: Yup.string().required("پر کردن این فیلد اجباری است "),
+  username: Yup.string().required(" پر کردن این فیلد اجباری است "),
 });
 
 const LoginForm = () => {
+  const navigation = useNavigation(); // Initialize useNavigation
+
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await axios.post(
-        "https://mylinks.ir/api/login/",
+        "https://mylinks.ir/api/register/",
         values
-      ); // Adjust the API endpoint
-      const { access, refresh } = response.data.tokens;
-
-      const cookies = new Cookies();
-
-      cookies.set("access_token", access, { path: "/" });
-      cookies.set("refresh_token", refresh, { path: "/" });
-
-      console.log("Access Token:", access);
-      console.log("Refresh Token:", refresh);
+      );
+      console.log(response.data);
+      
+      // Redirect to dashboard after successful login
+      navigation.push('/dashboard');
     } catch (error) {
       console.error(error);
     } finally {
