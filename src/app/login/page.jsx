@@ -1,11 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { FaLock, FaSign, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import Cookies from "universal-cookie";
-
+import { useRouter } from "next/navigation";
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("فرمت ایمیل اشتباه است ")
@@ -14,23 +14,28 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginForm = () => {
+  const [Alert, setAlert] = useState(null);
+  const router = useRouter();
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await axios.post(
         "https://mylinks.ir/api/login/",
         values
-      ); // Adjust the API endpoint
+      );
       const { access, refresh } = response.data.tokens;
-
       const cookies = new Cookies();
-
       cookies.set("access_token", access, { path: "/" });
       cookies.set("refresh_token", refresh, { path: "/" });
 
       console.log("Access Token:", access);
       console.log("Refresh Token:", refresh);
+      setAlert({ status: "succ", msg: "ورود موفق امیز بود" });
+      setTimeout(() => {
+        router.push("/dashbord");
+      }, 1000);
     } catch (error) {
       console.error(error);
+      setAlert({ status: "error", msg: "خطا در ورود !!!!" });
     } finally {
       setSubmitting(false);
     }
@@ -39,6 +44,20 @@ const LoginForm = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-600 text-gray-100">
       <div className="bg-gray-800 p-8 rounded shadow-md w-96">
+        {Alert && (
+          <div
+            className={`p-4 mb-4 text-sm text-gray-100 rounded-lg ${
+              Alert.status === "succ" ? "bg-green-600" : "bg-red-900"
+            } dark:bg-gray-800 ${
+              Alert.status === "succ"
+                ? "dark:text-green-400"
+                : "dark:text-red-600"
+            }`}
+            role="alert"
+          >
+            <span className="font-medium">{Alert.msg}</span>
+          </div>
+        )}
         <h2 className="text-2xl mb-4">فرم ورود</h2>
         <Formik
           initialValues={{ email: "", password: "" }}
