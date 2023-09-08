@@ -3,7 +3,13 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { FaLock, FaSign, FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaLock,
+  FaSign,
+  FaSignInAlt,
+  FaUserPlus,
+} from "react-icons/fa";
 import Cookies from "universal-cookie";
 import { useRouter } from "next/navigation";
 const validationSchema = Yup.object().shape({
@@ -25,10 +31,9 @@ const LoginForm = () => {
       const { access, refresh } = response.data.tokens;
       const cookies = new Cookies();
       cookies.set("access_token", access, { path: "/" });
-      cookies.set("refresh_token", refresh, { path: "/" });
 
       console.log("Access Token:", access);
-      console.log("Refresh Token:", refresh);
+
       setAlert({ status: "succ", msg: "ورود موفق امیز بود" });
       setTimeout(() => {
         router.push("/dashboard");
@@ -55,7 +60,15 @@ const LoginForm = () => {
             }`}
             role="alert"
           >
-            <span className="font-medium">{Alert.msg}</span>
+            {Alert.status === "succ" ? (
+              <div className="flex items-center justify-center">
+                <FaCheckCircle className="text-3xl mr-2" />{" "}
+                {/* Use the correct success icon */}
+                <span className="font-medium">{Alert.msg}</span>
+              </div>
+            ) : (
+              <span className="font-medium">{Alert.msg}</span>
+            )}
           </div>
         )}
         <h2 className="text-2xl mb-4">فرم ورود</h2>
@@ -119,7 +132,7 @@ const LoginForm = () => {
         </Formik>
         <div className="mt-4 text-center">
           <a
-            href="/forgot-password"
+            href="/forgetpassword"
             className="text-gray-400 hover:text-gray-200"
           >
             <FaLock className="inline-block mr-1 ml-2" />
@@ -127,7 +140,7 @@ const LoginForm = () => {
           </a>
           <span className="mx-2 text-gray-400">|</span>
 
-          <a href="/sinup" className="text-gray-400 hover:text-gray-200">
+          <a href="/signup" className="text-gray-400 hover:text-gray-200">
             ثبت نام
             <FaUserPlus className="inline-block mr-1 ml-1" />
           </a>

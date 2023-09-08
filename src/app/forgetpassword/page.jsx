@@ -30,7 +30,7 @@ const LoginForm = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-600 text-gray-100">
       <div className="bg-gray-800 p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl mb-4">باز نشانی رمز عبور</h2>
+        <h2 className="text-2xl mb-4 ">باز نشانی رمز عبور</h2>
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={validationSchema}
@@ -39,11 +39,13 @@ const LoginForm = () => {
           {({ isSubmitting }) => (
             <Form>
               <div className="mb-4">
-                <label htmlFor="email">ایمیل</label>
+                <label htmlFor="email" className="mb-2">
+                  ایمیل
+                </label>
                 <Field
                   type="email"
                   name="email"
-                  className="w-full px-3 py-2 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:shadow-outline"
+                  className="w-full px-3 py-2 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:shadow-outline mt-2"
                   placeholder="ایمیل خود را وارد کنید"
                 />
                 <ErrorMessage
