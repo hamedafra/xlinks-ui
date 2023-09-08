@@ -13,9 +13,9 @@ export const UserContaxtProvider = ({ children }) => {
 
     try {
       // Make the Axios GET request to the correct URL
-      const res = await axios.get("https://mylinks.ir/profile/", {
+      const res = await axios.put("https://mylinks.ir/profile/", {
         headers: {
-          auth: cookies.get("auth"),
+          Authorization: cookies.get("access_token"),
         },
       });
 

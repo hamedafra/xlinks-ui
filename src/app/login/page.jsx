@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { FaLock, FaSign, FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import Cookies from "universal-cookie";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -15,8 +16,19 @@ const validationSchema = Yup.object().shape({
 const LoginForm = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await axios.post("https://mylinks.ir/api/login", values); // Adjust the API endpoint
-      console.log(response.data); // Handle the response accordingly
+      const response = await axios.post(
+        "https://mylinks.ir/api/login/",
+        values
+      ); // Adjust the API endpoint
+      const { access, refresh } = response.data.tokens;
+
+      const cookies = new Cookies();
+
+      cookies.set("access_token", access, { path: "/" });
+      cookies.set("refresh_token", refresh, { path: "/" });
+
+      console.log("Access Token:", access);
+      console.log("Refresh Token:", refresh);
     } catch (error) {
       console.error(error);
     } finally {
