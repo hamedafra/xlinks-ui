@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 
@@ -9,16 +10,20 @@ export const UserContaxtProvider = ({ children }) => {
   const fetchUser = useCallback(async () => {
     const cookies = new Cookies();
     setIsLoading(true);
+
     try {
-      const res = await fetchHandler().get("/api/member/profile", {
-        method: "GET",
+      // Make the Axios GET request to the correct URL
+      const res = await axios.get("https://mylinks.ir/profile/", {
         headers: {
           auth: cookies.get("auth"),
         },
       });
+
+      // Assuming the response contains user data, update the state
       setUser(res.data.user);
       setIsLoading(false);
     } catch (err) {
+      // Handle errors and update the state accordingly
       setIsLoading(false);
       setUser(null);
     }
