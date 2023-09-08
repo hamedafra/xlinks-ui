@@ -32,7 +32,7 @@ const LoginForm = () => {
       setAlert({ status: "succ", msg: "ورود موفق امیز بود" });
       setTimeout(() => {
         router.push("/dashboard");
-      }, 200);
+      }, 300);
     } catch (error) {
       console.error(error);
       setAlert({ status: "error", msg: "خطا در ورود !!!!" });
