@@ -23,10 +23,11 @@ const Dashboard = () => {
     <div className="flex h-screen">
       <div className="flex-5 bg-gray-800 p-4">
         {/* Information Box */}
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-          <div className="text-xl font-semibold mb-3">Total Bandwidth</div>
-          <div className="text-2xl font-bold mb-4">12GB</div>
-          <ul className="space-y-2"></ul>
+        <div className="bg-gray-900 p-3 rounded-lg shadow-lg mb-6 flex gap-2">
+          <div className="text-sm font-semibold mr-3 text-gray-100 shadow-lg">
+            فضای باقی مانده
+          </div>
+          <div className="text-sm font-bold mb-1  text-green-400">12GB</div>
         </div>
       </div>
       {/* Content Box */}

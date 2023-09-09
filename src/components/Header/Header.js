@@ -7,8 +7,10 @@ import { useContext } from "react";
 import { UserContext } from "@/contaxt/userContaxt";
 import HeaderProfile from "../HeaderProfile/HeaderProfile";
 
+import SmSpiner from "../Icon/SmSpiner";
+
 function Header() {
-  const user = useContext(UserContext).user;
+  const { isLoading, user } = useContext(UserContext);
   return (
     <>
       <header class="w-full text-gray-200 bg-gray-800 border-t border-gray-100 shadow-sm body-font">
@@ -32,7 +34,7 @@ function Header() {
               پلن ها
             </a>
           </nav>
-          {user ? <HeaderProfile /> : <HeaderAuth />}
+          {isLoading ? <SmSpiner /> : user ? <HeaderProfile /> : <HeaderAuth />}
         </div>
       </header>
     </>
