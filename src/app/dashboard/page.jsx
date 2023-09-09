@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/router"; // Corrected the import path
+import { useRouter } from 'next/navigation';
 import { UserContext } from "@/contaxt/userContaxt";
 import React, { useEffect, useContext } from "react";
 import Spinner from "@/components/Spiner/Spiner";
