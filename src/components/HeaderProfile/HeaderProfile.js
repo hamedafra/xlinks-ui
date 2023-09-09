@@ -43,6 +43,11 @@ function HeaderProfile() {
       {isDrawerOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg">
           <ul className="mt-3 mr-3 mb-3">
+            <li className="mb-1 p-2 hover:bg-gray-600 transition-bg duration-300 flex items-center cursor-pointer">
+              <FiUser className="m-1" />
+              <a href="#">داشبورد</a>
+            </li>
+
             <li
               className="mb-1 p-2 hover:bg-gray-600 transition-bg duration-300 flex items-center cursor-pointer"
               onClick={handleLogout}
