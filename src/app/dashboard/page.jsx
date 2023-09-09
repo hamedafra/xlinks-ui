@@ -3,19 +3,20 @@
 import { useRouter } from "next/navigation";
 import { UserContext } from "@/contaxt/userContaxt";
 import React, { useEffect, useContext } from "react";
+import Spinner from "@/components/Spiner/Spiner";
 
 const Dashboard = () => {
   const user = useContext(UserContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (!user.user) {
+    if (!user.user & !user.isLoading) {
       router.push("/login?message=Unauthorized");
     }
   }, [router, user]);
 
   if (!user.user) {
-    return null;
+    return <Spinner />;
   }
 
   return (
