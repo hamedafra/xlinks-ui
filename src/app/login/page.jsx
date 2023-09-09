@@ -14,6 +14,7 @@ import {
 import Cookies from "universal-cookie";
 import { useRouter } from "next/navigation";
 import { UserContext } from "@/contaxt/userContaxt";
+import { BiLoader } from "react-icons/bi";
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("فرمت ایمیل اشتباه است ")
@@ -87,7 +88,7 @@ const LoginForm = () => {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <Form>
+            <Form method="post">
               <div className="mb-4">
                 <label htmlFor="email">ایمیل</label>
                 <Field
@@ -127,7 +128,7 @@ const LoginForm = () => {
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center p-2">
-                    <FaSignInAlt className="animate-spin mr-2" />
+                    <BiLoader className="animate-spin mx-2" />
                     Loading...
                   </span>
                 ) : (
