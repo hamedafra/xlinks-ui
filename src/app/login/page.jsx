@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-
 import * as Yup from "yup";
 import axios from "axios";
 import {
@@ -34,8 +33,9 @@ const LoginForm = () => {
       );
       const { access, refresh } = response.data.tokens;
       const cookies = new Cookies();
-      cookies.set("access_token", access, { path: "/" });
-      cookies.set("refresh_token", access, { path: "/" });
+      cookies.set("access_token", access, { path: "/", expires: new Date(response.data.tokens.access_token_expires_at) });
+      cookies.set("refresh_token", refresh, { path: "/", expires: new Date(response.data.tokens.refresh_token_expires_at) });
+
 
       setAlert({ status: "succ", msg: "ورود موفق امیز بود" });
       setTimeout(() => {

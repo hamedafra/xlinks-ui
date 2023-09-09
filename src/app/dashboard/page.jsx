@@ -5,17 +5,28 @@ import { UserContext } from "@/contaxt/userContaxt";
 import React, { useEffect, useContext } from "react";
 import Spinner from "@/components/Spiner/Spiner";
 import { FiCreditCard, FiLogOut } from "react-icons/fi";
+import Cookies from 'universal-cookie';
+import { checkAndRefreshToken } from '@/utils/auth.js';
+
+
 
 const Dashboard = () => {
   const user = useContext(UserContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (!user.user & !user.isLoading) {
-      router.push("/login?message=Unauthorized");
-    }
-  }, [router, user]);
+    const authenticate = async () => {
+      const isAuthenticated = await checkAndRefreshToken();
+      if (!isAuthenticated) {
+        router.push("/login?message=Session expired. Please log in again.");
+      } else if (!user.user && !user.isLoading) {
+        router.push("/login?message=Unauthorized");
+      }
+    };
 
+    authenticate();
+  }, [router, user]);
+  
   if (!user.user) {
     return <Spinner />;
   }
