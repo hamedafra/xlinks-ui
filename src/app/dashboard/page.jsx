@@ -1,21 +1,18 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router"; // Corrected the import path
 import { UserContext } from "@/contaxt/userContaxt";
 import React, { useEffect, useContext } from "react";
 import Spinner from "@/components/Spiner/Spiner";
 import { FiCreditCard, FiLogOut } from "react-icons/fi";
-import Cookies from 'universal-cookie';
 import { checkAndRefreshToken } from '@/utils/auth.js';
-
-
 
 const Dashboard = () => {
   const user = useContext(UserContext);
   const router = useRouter();
 
   useEffect(() => {
-    const authenticate = async () => {
+    const authenticateUser = async () => {
       const isAuthenticated = await checkAndRefreshToken();
       if (!isAuthenticated) {
         router.push("/login?message=Session expired. Please log in again.");
@@ -24,9 +21,9 @@ const Dashboard = () => {
       }
     };
 
-    authenticate();
+    authenticateUser();
   }, [router, user]);
-  
+
   if (!user.user) {
     return <Spinner />;
   }
