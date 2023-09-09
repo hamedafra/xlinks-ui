@@ -2,9 +2,9 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 
-const UserContext = React.createContext();
+export const UserContext = React.createContext();
 
-export const UserContextProvider = ({ children }) => {
+const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -14,14 +14,14 @@ export const UserContextProvider = ({ children }) => {
 
     try {
       // Make the Axios GET request to the correct URL
-      const res = await axios.get("https://mylinks.ir/profile/", {
+      const res = await axios.get("https://mylinks.ir/api/profile/", {
         headers: {
           Authorization: `Bearer ${cookies.get("access_token")}`,
         },
       });
 
       // Assuming the response contains user data, update the state
-      setUser(res.data.user);
+      setUser(res.data);
       setIsLoading(false);
     } catch (err) {
       // Handle errors and update the state accordingly
@@ -30,7 +30,7 @@ export const UserContextProvider = ({ children }) => {
         try {
           const refreshToken = cookies.get("refresh_token");
           const refreshRes = await axios.post(
-            "https://mylinks.ir/token/refresh/",
+            "https://mylinks.ir/api/token/refresh/",
             {
               refresh: refreshToken,
             }
@@ -68,7 +68,7 @@ export const UserContextProvider = ({ children }) => {
   }, [fetchUser]);
 
   return (
-    <UserContext.Provider value={{ user, isLoading }}>
+    <UserContext.Provider value={{ user, isLoading, reFetchUser: fetchUser }}>
       {children}
     </UserContext.Provider>
   );

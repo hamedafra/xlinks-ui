@@ -1,8 +1,22 @@
 "use client";
-import React from "react";
+
+import { useRouter } from "next/navigation";
+import { UserContext } from "@/contaxt/userContaxt";
+import React, { useEffect, useContext } from "react";
 
 const Dashboard = () => {
-  // Generate random menu items
+  const user = useContext(UserContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user.user) {
+      router.push("/login?message=Unauthorized");
+    }
+  }, [router, user]);
+
+  if (!user.user) {
+    return null;
+  }
 
   return (
     <div className="flex h-screen">

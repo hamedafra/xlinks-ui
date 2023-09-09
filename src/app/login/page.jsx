@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+
 import * as Yup from "yup";
 import axios from "axios";
 import {
@@ -12,6 +13,7 @@ import {
 } from "react-icons/fa";
 import Cookies from "universal-cookie";
 import { useRouter } from "next/navigation";
+import { UserContext } from "@/contaxt/userContaxt";
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("فرمت ایمیل اشتباه است ")
@@ -20,6 +22,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginForm = () => {
+  const { reFetchUser } = useContext(UserContext);
   const [Alert, setAlert] = useState(null);
   const router = useRouter();
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -31,13 +34,13 @@ const LoginForm = () => {
       const { access, refresh } = response.data.tokens;
       const cookies = new Cookies();
       cookies.set("access_token", access, { path: "/" });
-
-      console.log("Access Token:", access);
+      cookies.set("refresh_token", access, { path: "/" });
 
       setAlert({ status: "succ", msg: "ورود موفق امیز بود" });
       setTimeout(() => {
         router.push("/dashboard");
       }, 300);
+      reFetchUser();
     } catch (error) {
       console.error(error);
       setAlert({ status: "error", msg: "خطا در ورود !!!!" });
@@ -45,6 +48,12 @@ const LoginForm = () => {
       setSubmitting(false);
     }
   };
+  useEffect(() => {
+    const queryMessage = router.query?.message;
+    if (queryMessage) {
+      setAlert({ status: "error", msg: queryMessage });
+    }
+  }, [router.query]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-600 text-gray-100">
