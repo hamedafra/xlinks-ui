@@ -3,12 +3,19 @@ import { UserContext } from "@/contaxt/userContaxt";
 import { FaAngleDown } from "react-icons/fa";
 import { FiLogOut, FiUser } from "react-icons/fi";
 import Cookies from "universal-cookie";
+function extractUsernameFromEmail(email) {
+  const parts = email.split("@");
+  if (parts.length > 0) {
+    return parts[0];
+  }
 
+  return email;
+}
 function HeaderProfile() {
   const { user, reFetchUser } = useContext(UserContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const cookies = new Cookies();
-
+  console.log(user);
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
@@ -27,7 +34,9 @@ function HeaderProfile() {
         className="flex items-center focus:outline-none bg-red-600 p-2 rounded-md"
       >
         <FiUser className="m-1" />
-        <span className="ml-2 text-gray-300 text-sm">{user.name}</span>
+        <span className="ml-2 text-gray-300 text-sm">
+          {extractUsernameFromEmail(user.email)}
+        </span>
         <FaAngleDown className="ml-1" /> {/* Arrow icon */}
       </button>
 
