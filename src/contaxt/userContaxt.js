@@ -41,7 +41,7 @@ export const UserContextProvider = ({ children }) => {
 
           // Retry fetching the user with the new access token
           const newAccessToken = refreshRes.data.access;
-          const newRes = await axios.get("https://mylinks.ir/profile/", {
+          const newRes = await axios.get("https://mylinks.ir/api/profile/", {
             headers: {
               Authorization: `Bearer ${newAccessToken}`,
             },
