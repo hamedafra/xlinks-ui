@@ -1,0 +1,63 @@
+import cookie from 'cookie';
+
+export default async (req, res) => {
+    if (req.method === 'POST') {
+        const { email, password } = req.body;
+
+        const body = JSON.stringify({
+            email,
+            password
+        });
+
+        try {
+            const apiRes = await fetch(`https://mylinks.ir/api/login/`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: body
+            });
+
+            const data = await apiRes.json();
+
+            if (apiRes.status === 200) {
+                res.setHeader('Set-Cookie', [
+                    cookie.serialize(
+                        'access', data.tokens.access, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV !== 'development',
+                            maxAge: new Date(data.tokens.access_token_expires_at).getTime() - new Date().getTime(),
+                            sameSite: 'strict',
+                            path: '/api/'
+                        }
+                    ),
+                    cookie.serialize(
+                        'refresh', data.tokens.refresh, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV !== 'development',
+                            maxAge: new Date(data.tokens.refresh_token_expires_at).getTime() - new Date().getTime(),
+                            sameSite: 'strict',
+                            path: '/api/'
+                        }
+                    )
+                ]);
+
+                return res.status(200).json({
+                    success: 'Logged in successfully'
+                });
+            } else {
+                return res.status(apiRes.status).json({
+                    error: 'Authentication failed'
+                });
+            }
+        } catch(err) {
+            return res.status(500).json({
+                error: 'Something went wrong when authenticating'
+            });
+        }
+    } else {
+        res.setHeader('Allow', ['POST']);
+        return res.status(405).json({ error: `Method ${req.method} not allowed` });
+    } 
+};
