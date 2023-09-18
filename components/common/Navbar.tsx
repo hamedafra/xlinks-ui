@@ -35,6 +35,13 @@ export default function Navbar() {
 			>
 				Dashboard
 			</NavLink>
+			<NavLink
+				isSelected={isSelected('/profile')}
+				isMobile={isMobile}
+				href='/profile'
+			>
+				profile
+			</NavLink>
 			<NavLink isMobile={isMobile} onClick={handleLogout}>
 				Logout
 			</NavLink>
