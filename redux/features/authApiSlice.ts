@@ -90,6 +90,13 @@ const authApiSlice = apiSlice.injectEndpoints({
 				body: { uid, token, new_password, re_new_password },
 			}),
 		}),
+		downloadInitiate: builder.mutation({
+            query: ({ url }) => ({
+                url: 'https://mylinks.ir/api/leecher/download/initiate/',
+                method: 'POST',
+				body: { url },
+            }),
+        }),
 	}),
 });
 
@@ -102,5 +109,6 @@ export const {
 	useLogoutMutation,
 	useActivationMutation,
 	useResetPasswordMutation,
-	useResetPasswordConfirmMutation,
+	useResetPasswordConfirmMutation,    
+	useDownloadInitiateMutation,
 } = authApiSlice;

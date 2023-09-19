@@ -1,9 +1,11 @@
 'use client';
 
 import { useRetrieveUserQuery } from '@/redux/features/authApiSlice';
+import { useDownloadInitiateMutation } from '@/redux/features/authApiSlice';
+import { setProgress, setIsDownloading } from '@/redux/features/downloadSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { List, Spinner } from '@/components/common';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
 export default function Page() {
     const { data: user, isLoading, isFetching } = useRetrieveUserQuery();
@@ -24,10 +26,13 @@ export default function Page() {
 	];
 
     const [url, setUrl] = useState('');
-    const [progress, setProgress] = useState(0);
     const [group, setGroup] = useState('');
     const [downloadLink, setDownloadLink] = useState(null);
-    const [isDownloading, setIsDownloading] = useState(false);
+
+    const { progress, isDownloading } = useAppSelector(state => state.download);
+    const dispatch = useAppDispatch();
+
+    const [downloadInitiate] = useDownloadInitiateMutation();
 
     useEffect(() => {
         if (group && isDownloading) {
@@ -38,13 +43,13 @@ export default function Page() {
                 if (data.type === 'send.progress') {
                     if (data.progress === 'Download complete') {
                         setDownloadLink(data.file_link);
-                        setIsDownloading(false);
+                        dispatch(setIsDownloading(false));
                         ws.close();
                     } else if (data.progress === 'error') {
-                        setIsDownloading(false);
+                        dispatch(setIsDownloading(false));
                         ws.close();
                     } else {
-                        setProgress(data.progress);
+                        dispatch(setProgress(data.progress));
                     }
                 }
             };
@@ -57,14 +62,18 @@ export default function Page() {
                 ws.close();
             };
         }
-    }, [group, isDownloading]);
+    }, [group, isDownloading, dispatch]);
 
     const initiateDownload = async () => {
         try {
-            const response = await axios.post('https://mylinks.ir/api/leecher/download/initiate/', { url });
-            const data = response.data;
-            setGroup(data.group_name);
-            setIsDownloading(true);
+            const result = await downloadInitiate({ url });
+
+            if ('data' in result) {
+                setGroup(result.data.group_name);
+                dispatch(setIsDownloading(true));
+            } else {
+                console.error('Download initiation error:', result.error);
+            }
         } catch (error) {
             console.error('Download initiation error:', error);
         }
