@@ -6,6 +6,14 @@ interface User {
 	email: string;
 }
 
+
+interface UserListItem {
+    id: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+}
+
 interface SocialAuthArgs {
 	provider: string;
 	state: string;
@@ -20,7 +28,7 @@ interface CreateUserResponse {
 const authApiSlice = apiSlice.injectEndpoints({
 	endpoints: builder => ({
 		retrieveUser: builder.query<User, void>({
-			query: () => '/users/me/',
+			query: () => '/account/',
 		}),
 		socialAuthenticate: builder.mutation<
 			CreateUserResponse,
@@ -97,6 +105,15 @@ const authApiSlice = apiSlice.injectEndpoints({
 				body: { url },
             }),
         }),
+		adminListUsers: builder.query<UserListItem[], void>({
+			query: () => '/admin/listusers/', 
+		}),
+		adminDeleteUser: builder.mutation({
+            query: (userId) => ({
+                url: `/admin/account/${userId}/delete/`,
+                method: 'DELETE',
+            }),
+        }),
 	}),
 });
 
@@ -111,4 +128,6 @@ export const {
 	useResetPasswordMutation,
 	useResetPasswordConfirmMutation,    
 	useDownloadInitiateMutation,
+	useAdminListUsersQuery,
+	useAdminDeleteUserMutation,
 } = authApiSlice;
