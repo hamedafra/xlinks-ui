@@ -27,7 +27,7 @@ export type UserProfile = {
 
 const UserEditModal: React.FC<UserEditModalProps> = ({ userId, onClose, onEditComplete }) => {
   const [userData, setUserData] = useState<UserProfile | null>(null);
-  const { data: user } = useAdminFetchUserByIdQuery(userId);
+  const { data: user, refetch } = useAdminFetchUserByIdQuery(userId);
   const [updateUser, { isLoading }] = useAdminUpdateUserMutation();
 
   useEffect(() => {
@@ -35,6 +35,13 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ userId, onClose, onEditCo
       setUserData(user);
     }
   }, [user]);
+
+  const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, checked } = e.target;
+    setUserData((prev) => (prev ? { ...prev, [name]: checked } : null));
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -45,7 +52,8 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ userId, onClose, onEditCo
     e.preventDefault();
     if (userData) {
       await updateUser(userData);
-      onEditComplete(); // Call the callback function after editing is complete
+      onEditComplete();
+      refetch();
     }
   };
 
@@ -87,6 +95,31 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ userId, onClose, onEditCo
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2" htmlFor="mobile">Mobile</label>
             <input type="tel" name="mobile" id="mobile" value={userData.mobile || ''} onChange={handleInputChange} className="p-2 border rounded-md w-full" />
+          </div>
+          <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Permissions</label>
+          <div className="flex items-center">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                name="is_superuser"
+                checked={userData.is_superuser || false}
+                onChange={handleCheckboxChange} // Keep the onChange handler
+                className="form-checkbox text-blue-600 h-5 w-5 border border-gray-300 rounded-md checked:bg-blue-600 checked:border-transparent"
+              />
+              <span className="ml-2 text-gray-700">Admin</span>
+            </label>
+            <label className="inline-flex items-center ml-4">
+              <input
+                type="checkbox"
+                name="is_staff"
+                checked={userData.is_staff || false}
+                onChange={handleCheckboxChange} // Keep the onChange handler
+                className="form-checkbox text-green-600 h-5 w-5 border border-gray-300 rounded-md checked:bg-green-600 checked:border-transparent"
+              />
+              <span className="ml-2 text-gray-700">Staff</span>
+            </label>
+          </div>
           </div>
           <div className="flex justify-between items-center">
             <button type="button" onClick={onClose} className="text-gray-600 hover:text-gray-900">Cancel</button>
