@@ -1,28 +1,45 @@
 'use client';
 
-import { useRetrieveUserQuery, useAdminListUsersQuery, useAdminDeleteUserMutation } from '@/redux/features/authApiSlice';
-import { useRouter } from 'next/navigation';
-import { List, Spinner } from '@/components/common';
+import { useRetrieveUserQuery, useAdminListUsersQuery, useAdminDeleteUserMutation, useAdminFetchUserByIdQuery } from '@/redux/features/authApiSlice';
+import { useRouter } from "next/navigation";
+import { List, Spinner } from "@/components/common";
+import { UserEditModal, UserProfile } from "@/components/admin";
+import { useState } from "react";
 
 export default function Page() {
-    const { data: user, isLoading: userLoading, isFetching: userFetching } = useRetrieveUserQuery();
-    const { data: userList, isLoading: userListLoading , refetch} = useAdminListUsersQuery();
-    const [adminDeleteUser, { isLoading: isDeleting, error: deleteError }] = useAdminDeleteUserMutation();
-    const router = useRouter();
+  const { data: user, isLoading: userLoading, isFetching: userFetching } = useRetrieveUserQuery();
+  const { data: userList, isLoading: userListLoading, refetch } = useAdminListUsersQuery();
+  const [adminDeleteUser, { isLoading: isDeleting, error: deleteError }] = useAdminDeleteUserMutation();
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const router = useRouter();
+
+  const handleDelete = async (userId: number) => {
+    try {
+      await adminDeleteUser(userId);
+      refetch();
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+    }
+  };
 
     const handleEdit = (userId: number) => {
-        router.push(`/admin/edit-user/${userId}`);
+        const userToEdit = userList?.find(user => user.id === userId);
+        if (userToEdit) {
+            setSelectedUser(userToEdit);
+            setIsModalOpen(true);
+        }
     };
 
-    const handleDelete = async (userId: number) => {
-        try {
-            await adminDeleteUser(userId);
-            // Optionally, refresh your user list after deleting.
-            refetch();
-        } catch (error) {
-            console.error("Failed to delete user:", error);
-        }
-    }
+    const handleEditComplete = () => {
+        setIsModalOpen(false);
+        setSelectedUser(null);
+        // Refetch the user list here
+        refetch();
+      };
 
     const config = [
         {
@@ -99,6 +116,18 @@ export default function Page() {
                     </table>
                 </section>
             </main>
+            {isModalOpen && selectedUser && (
+            <div>
+                <UserEditModal 
+                    userId={selectedUser.id}
+                    onClose={() => {
+                        setIsModalOpen(false);
+                        setSelectedUser(null);
+                    }}
+                    onEditComplete={handleEditComplete} 
+                />
+            </div>
+        )}
         </>
     );
 }

@@ -1,8 +1,8 @@
 import { apiSlice } from '../services/apiSlice';
 
 interface User {
-	first_name: string;
-	last_name: string;
+	first_name?: string;
+	last_name?: string;
 	email: string;
 }
 
@@ -23,6 +23,23 @@ interface SocialAuthArgs {
 interface CreateUserResponse {
 	success: boolean;
 	user: User;
+}
+
+interface UserProfile {
+    id: number;
+    email: string;
+    first_name?: string;
+    last_name?: string;
+    bio?: string;
+    traffic_limit?: number;
+    traffic_used?: number;
+    ip?: string ;
+    mobile?: string ;
+    avatar?: string;
+    is_active?: boolean;
+    is_staff?: boolean;
+    is_superuser?: boolean;
+    date_joined?: Date;
 }
 
 const authApiSlice = apiSlice.injectEndpoints({
@@ -114,6 +131,16 @@ const authApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE',
             }),
         }),
+		adminFetchUserById: builder.query<UserProfile, number>({
+			query: (userId) => `/admin/user/${userId}/`,
+		  }),
+		adminUpdateUser: builder.mutation<UserProfile, UserProfile>({
+			query: (userUpdates) => ({
+				url: `/admin/user/${userUpdates.id}/`,
+				method: 'PUT',
+				body: userUpdates,
+			}),
+		}),
 	}),
 });
 
@@ -130,4 +157,6 @@ export const {
 	useDownloadInitiateMutation,
 	useAdminListUsersQuery,
 	useAdminDeleteUserMutation,
+	useAdminFetchUserByIdQuery,
+	useAdminUpdateUserMutation,
 } = authApiSlice;
