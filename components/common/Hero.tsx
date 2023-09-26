@@ -1,9 +1,6 @@
-'use client';
-
-import { FC } from 'react';
+import { FC } from "react";
 import { FaDownload, FaSpotify, FaYoutube } from "react-icons/fa";
 import Image from "next/image";
-import torrent from "../../public/torrent.png";
 
 const Hero: FC = () => {
   return (
@@ -56,7 +53,6 @@ const Hero: FC = () => {
                 <span className="text-white">Youtube</span>
               </div>
               <div className="flex mr-5 mb-5 p-3 gap-1 rounded-full bg-green-600">
-                <Image src={torrent} alt="torrent" width={20} />
                 <span className="text-white">torrent</span>
               </div>
             </div>
@@ -65,6 +61,6 @@ const Hero: FC = () => {
       </div>
     </section>
   );
-}
+};
 
 export default Hero;
