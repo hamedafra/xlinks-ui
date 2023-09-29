@@ -1,9 +1,10 @@
-import { RequireAuth } from '@/components/utils';
+import SidebarLayout from "@/components/common/SideBar";
+import { RequireAuth } from "@/components/utils";
 
 interface Props {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export default function Layout({ children }: Props) {
-	return <RequireAuth>{children}</RequireAuth>;
+  return <RequireAuth>{children}</RequireAuth>;
 }
